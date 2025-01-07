@@ -1,4 +1,3 @@
-from orm.config import BaseClass
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey, Float
 # declarative_base permite definir la clase base para mapear las tablas de la BD
 from sqlalchemy.ext.declarative import declarative_base
