@@ -3,17 +3,22 @@ from sqlalchemy import create_engine
 #El session maker permite crear sesiones para hacer consultas
 #Por cada consulta se abre y cierra una sesión
 from sqlalchemy.orm import sessionmaker
-# declarative_base permite definir la clase base para mapear las tablas de la BD
-from sqlalchemy.ext.declarative import declarative_base
+# Importar el archivo de modelos
+from orm import modelos
+import os
 
 #1. Configurar la conexion BD
 # Crear la URL de la BD -> servidorBD://usuario:password@url:puerto/nombreBD
-URL_BASE_DATOS = "postgresql://roythewizard:rabito2003@localhost:5432/alumnos"
+# URL_BASE_DATOS = "postgresql://roythewizard:rabito2003@localhost:5432/alumnos"
 # Conectarnos mediante el esquema app
-engine = create_engine(URL_BASE_DATOS,
-                       connect_args={
-                           "options": "-csearch_path=app"                           
-                       })
+# engine = create_engine(URL_BASE_DATOS,
+#                       connect_args={
+#                           "options": "-csearch_path=app"                           
+#
+#                       })
+# Conecta a la base de datos
+engine = create_engine(os.getenv("db_uri", "sqlite://base-ejemplo.db"))
+modelos.BaseClass.metadata.create_all(engine)
 
 #2. Obtener la clase que nos permite crear objetos tipo session
 SessionClass = sessionmaker(engine) 
@@ -25,6 +30,3 @@ def generador_sesion():
         yield sesion 
     finally:
         sesion.close()
-
-#3.- Obtener la clase base para mapear tablas
-BaseClass = declarative_base()
